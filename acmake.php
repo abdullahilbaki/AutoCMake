@@ -10,10 +10,31 @@ if (isset($argv[1])) {
     } while (!in_array($extention, ['c', 'cpp']));
 }
 
-if (!empty($extention)) {
-    // creates two folder
-    mkdir('src');
-    mkdir('build');
+if (isset($argv[2])) {
+    $project_name = $argv[2];
+} else {
+    do {
+        echo "Please provide a project name: ";
+        $project_name = trim(fgets(STDIN));
+    } while (empty($project_name));
+}
+
+if (!empty($extention) && !empty($project_name)) {
+    if (file_exists($project_name)) {
+        do {
+            echo "Warning: A project with a similar name already exists in the current directory.\n";
+            echo "Please provide another project name: ";
+            $project_name = trim(fgets(STDIN));
+        } while (file_exists($project_name));
+
+        mkdir($project_name);
+        mkdir($project_name . "/src");
+        mkdir($project_name . "/build");
+    } else {
+        mkdir($project_name);
+        mkdir($project_name . "/src");
+        mkdir($project_name . "/build");
+    }
 }
 
 $file_name = "main." . $extention;
@@ -38,7 +59,7 @@ if ($file_name == "main.c") {
         return 0;
     }
     PROGRAM;
-    file_put_contents('src/main.c', $c_program);
+    file_put_contents($project_name . "/src/main.c", $c_program);
 } else if ($file_name == "main.cpp") {
     $cpp_program = <<<'PROGRAM'
     #include <iostream>
@@ -62,5 +83,5 @@ if ($file_name == "main.c") {
         return 0;
     }
     PROGRAM;
-    file_put_contents('src/main.cpp', $cpp_program);
+    file_put_contents($project_name . "/src/main.cpp", $cpp_program);
 }
