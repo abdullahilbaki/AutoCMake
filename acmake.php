@@ -85,3 +85,22 @@ if ($file_name == "main.c") {
     PROGRAM;
     file_put_contents($project_name . "/src/main.cpp", $cpp_program);
 }
+
+
+
+// check if cmake is installed
+$cmake_installed = shell_exec('command -v cmake');
+
+if (!$cmake_installed) {
+    echo "CMake is not installed. Downloading...\n";
+
+    // download CMake
+    $download_command = "sudo apt-get install cmake -y";
+    shell_exec($download_command);
+
+    // get CMake version
+    $cmake_version = trim(shell_exec('cmake --version | head -n 1 | cut -d" " -f3'));
+} else {
+    // get CMake version
+    $cmake_version = trim(shell_exec('cmake --version | head -n 1 | cut -d" " -f3'));
+}
